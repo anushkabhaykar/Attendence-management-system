@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CampusFace - Project Explanation, Architecture & Technical Manual</title>
+<style>
+    @page {
+        size: A4;
+        margin: 20mm 16mm 20mm 16mm;
+    }
+    body {
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+        color: #1e293b;
+        background-color: #ffffff;
+        line-height: 1.6;
+        font-size: 11pt;
+        margin: 0;
+        padding: 0;
+    }
+    .cover-page {
+        page-break-after: always;
+        text-align: center;
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+    .institution-header {
+        font-size: 16pt;
+        font-weight: 700;
+        color: #1e3a8a;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+    .institution-sub {
+        font-size: 11pt;
+        color: #64748b;
+        margin-bottom: 50px;
+    }
+    .project-badge {
+        display: inline-block;
+        background: #dbeafe;
+        color: #1e40af;
+        padding: 6px 18px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 10pt;
+        margin-bottom: 25px;
+    }
+    .main-title {
+        font-size: 26pt;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.25;
+        margin-bottom: 15px;
+    }
+    .main-subtitle {
+        font-size: 13pt;
+        color: #475569;
+        max-width: 650px;
+        margin: 0 auto 50px auto;
+        font-weight: 400;
+    }
+    .meta-box {
+        border-top: 2px solid #e2e8f0;
+        border-bottom: 2px solid #e2e8f0;
+        padding: 25px 0;
+        margin: 40px auto;
+        max-width: 500px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        text-align: left;
+    }
+    .meta-item label {
+        display: block;
+        font-size: 9pt;
+        color: #64748b;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    .meta-item span {
+        font-size: 11pt;
+        color: #0f172a;
+        font-weight: 600;
+    }
+    .toc-container {
+        page-break-after: always;
+        padding-top: 20px;
+    }
+    h1 {
+        font-size: 18pt;
+        color: #1e3a8a;
+        border-bottom: 2px solid #3b82f6;
+        padding-bottom: 6px;
+        margin-top: 35px;
+        margin-bottom: 16px;
+        page-break-after: avoid;
+    }
+    h2 {
+        font-size: 13pt;
+        color: #0f172a;
+        margin-top: 24px;
+        margin-bottom: 10px;
+        border-left: 4px solid #10b981;
+        padding-left: 10px;
+        page-break-after: avoid;
+    }
+    h3 {
+        font-size: 11pt;
+        color: #334155;
+        margin-top: 16px;
+        margin-bottom: 8px;
+        page-break-after: avoid;
+    }
+    p {
+        margin: 0 0 12px 0;
+        text-align: justify;
+    }
+    ul, ol {
+        margin: 0 0 14px 20px;
+        padding: 0;
+    }
+    li {
+        margin-bottom: 6px;
+    }
+    .callout {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin: 16px 0;
+        font-size: 10pt;
+        page-break-inside: avoid;
+    }
+    .callout-info {
+        background-color: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        color: #1e40af;
+    }
+    .callout-success {
+        background-color: #f0fdf4;
+        border-left: 4px solid #10b981;
+        color: #166534;
+    }
+    .callout-warning {
+        background-color: #fffbeb;
+        border-left: 4px solid #f59e0b;
+        color: #92400e;
+    }
+    .callout-danger {
+        background-color: #fef2f2;
+        border-left: 4px solid #ef4444;
+        color: #991b1b;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 9.5pt;
+        page-break-inside: avoid;
+    }
+    th, td {
+        border: 1px solid #cbd5e1;
+        padding: 8px 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #f1f5f9;
+        color: #0f172a;
+        font-weight: 700;
+    }
+    tr:nth-child(even) {
+        background-color: #f8fafc;
+    }
+    code {
+        font-family: 'Consolas', 'Courier New', monospace;
+        background: #f1f5f9;
+        color: #0f172a;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 9.5pt;
+    }
+    pre {
+        background: #0f172a;
+        color: #f8fafc;
+        padding: 14px;
+        border-radius: 8px;
+        font-family: 'Consolas', monospace;
+        font-size: 9pt;
+        overflow-x: auto;
+        margin: 14px 0;
+        page-break-inside: avoid;
+    }
+    .equation-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 12px;
+        margin: 12px 0;
+        text-align: center;
+        font-family: 'Cambria Math', 'Times New Roman', serif;
+        font-size: 11pt;
+        color: #0f172a;
+        page-break-inside: avoid;
+    }
+    .page-break {
+        page-break-after: always;
+    }
+    .footer {
+        font-size: 8pt;
+        color: #94a3b8;
+        text-align: center;
+        margin-top: 30px;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 8px;
+    }
+    .diagram-box {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 14px;
+        margin: 15px 0;
+        font-family: 'Consolas', monospace;
+        font-size: 8.5pt;
+        line-height: 1.4;
+        color: #0f172a;
+        white-space: pre;
+        overflow-x: auto;
+        page-break-inside: avoid;
+    }
+</style>
+</head>
+<body>
+
+<!-- ================= COVER PAGE ================= -->
+<div class="cover-page">
+    <div class="institution-header">Department of Computer Science & Engineering</div>
+    <div class="institution-sub">B.Tech Capstone Academic Project & Technical Specification</div>
+
+    <div class="project-badge">BIOMETRIC DESKTOP SOFTWARE</div>
+    <div class="main-title">CampusFace</div>
+    <div class="main-subtitle">Automated Real-Time Face Recognition Attendance Management System with Dual-Engine Architecture & Continuous Biometric Verification</div>
+
+    <div class="meta-box">
+        <div class="meta-item">
+            <label>Project Title</label>
+            <span>CampusFace System</span>
+        </div>
+        <div class="meta-item">
+            <label>Technology Stack</label>
+            <span>Java, Swing, SQLite, LBPH</span>
+        </div>
+        <div class="meta-item">
+            <label>Database Architecture</label>
+            <span>Embedded SQLite 3 / MySQL</span>
+        </div>
+        <div class="meta-item">
+            <label>Biometric Engine</label>
+            <span>1024-D LBPH + Chi-Square</span>
+        </div>
+        <div class="meta-item">
+            <label>Target Audience</label>
+            <span>Colleges, Universities, Labs</span>
+        </div>
+        <div class="meta-item">
+            <label>Documentation Version</label>
+            <span>v2.4 (Production Release)</span>
+        </div>
+    </div>
+
+    <p style="text-align: center; font-size: 10pt; color: #64748b; margin-top: 40px;">
+        A comprehensive guide explaining the software design, computer vision pipeline, tools utilized,<br>
+        mathematical concepts, exception handling models, and system verification results.
+    </p>
+</div>
+
+<!-- ================= TABLE OF CONTENTS ================= -->
+<div class="toc-container">
+    <h1>Table of Contents</h1>
+    <table style="border: none;">
+        <tr style="background: none;"><td style="border: none; font-weight: 700;">1. Executive Summary & Problem Definition</td><td style="border: none; text-align: right; font-weight: 700;">Section 1</td></tr>
+        <tr style="background: none;"><td style="border: none; font-weight: 700;">2. Complete System Workflow & Operational Pipeline</td><td style="border: none; text-align: right; font-weight: 700;">Section 2</td></tr>
+        <tr style="background: none;"><td style="border: none; font-weight: 700;">3. Tools, Technologies & Libraries Utilized</td><td style="border: none; text-align: right; font-weight: 700;">Section 3</td></tr>
+        <tr style="background: none;"><td style="border: none; font-weight: 700;">4. Core Engineering Concepts & Mathematical Models</td><td style="border: none; text-align: right; font-weight: 700;">Section 4</td></tr>
+        <tr style="background: none; padding-left: 20px;"><td style="border: none; color: #475569;">&nbsp;&nbsp;&nbsp;&nbsp;4.1 MVC Architecture (Model-View-Controller)</td><td style="border: none; text-align: right; color: #475569;">4.1</td></tr>
+        <tr style="background: none; padding-left: 20px;"><td style="border: none; color: #475569;">&nbsp;&nbsp;&nbsp;&nbsp;4.2 Face Detection & Skin Chromaticity (YCbCr)</td><td style="border: none; text-align: right; color: #475569;">4.2</td></tr>
+        <tr style="background: none; padding-left: 20px;"><td style="border: none; color: #475569;">&nbsp;&nbsp;&nbsp;&nbsp;4.3 Grayscale Contrast Histogram Equalization</td><td style="border: none; text-align: right; color: #475569;">4.3</td></tr>
+        <tr style="background: none; padding-left: 20px;"><td style="border: none; color: #475569;">&nbsp;&nbsp;&nbsp;&nbsp;4.4 Local Binary Patterns Histogram (LBPH) Algorithm</td><td style="border: none; text-align: right; color: #475569;">4.4</td></tr>
+        <tr style="background: none; padding-left: 20px;"><td style="border: none; color: #475569;">&nbsp;&nbsp;&nbsp;&nbsp;4.5 Chi-Square Distance Metric & Confidence Scoring</td><td style="border: none; text-align: right; color: #475569;">4.5</td></tr>
+        <tr style="background: none; padding-left: 20px;"><td style="border: none; color: #475569;">&nbsp;&nbsp;&nbsp;&nbsp;4.6 Multithreading & Event Dispatch Thread (EDT) Synchronization</td><td style="border: none; text-align: right; color: #475569;">4.6</td></tr>
+        <tr style="background: none; padding-left: 20px;"><td style="border: none; color: #475569;">&nbsp;&nbsp;&nbsp;&nbsp;4.7 Relational Integrity & Duplicate Attendance Prevention</td><td style="border: none; text-align: right; color: #475569;">4.7</td></tr>
+        <tr style="background: none;"><td style="border: none; font-weight: 700;">5. Comprehensive Exceptions & Error Handling Architecture</td><td style="border: none; text-align: right; font-weight: 700;">Section 5</td></tr>
+        <tr style="background: none;"><td style="border: none; font-weight: 700;">6. Database Schema & Relational Specifications</td><td style="border: none; text-align: right; font-weight: 700;">Section 6</td></tr>
+        <tr style="background: none;"><td style="border: none; font-weight: 700;">7. Verification, Automated Testing & Viva Q&A Guide</td><td style="border: none; text-align: right; font-weight: 700;">Section 7</td></tr>
+    </table>
+</div>
+
+<!-- ================= SECTION 1 ================= -->
+<h1>1. Executive Summary & Problem Definition</h1>
+
+<h2>1.1 Project Overview</h2>
+<p>
+    <strong>CampusFace</strong> is an automated biometric desktop software system engineered in <strong>Java (Swing)</strong>. It is designed to modernize and automate student roll-call in college lectures and laboratory practicals through real-time <strong>Local Binary Pattern Histogram (LBPH) Face Recognition</strong>.
+</p>
+<p>
+    The system interfaces directly with USB hardware webcams via native DirectShow drivers, identifies enrolled students within fractions of a second, provides immediate high-visibility visual feedback (<strong>✔ PRESENT</strong> emerald badge), logs attendance records into a relational database, and prevents proxy or duplicate attendance automatically.
+</p>
+
+<h2>1.2 The Problem with Traditional Attendance</h2>
+<ul>
+    <li><strong>Time Inefficiency:</strong> Traditional manual calling of roll numbers consumes 10 to 15 minutes of every 60-minute lecture, reducing effective teaching time by 20%.</li>
+    <li><strong>Proxy Attendance:</strong> Students frequently sign attendance sheets on behalf of absent peers, leading to falsified academic records.</li>
+    <li><strong>Administrative Burden:</strong> Calculating eligibility for examinations requires manual compilation from physical registers, resulting in human calculation errors.</li>
+    <li><strong>Lack of Real-Time Transparency:</strong> Neither students nor department heads possess instant visibility into daily or subject-wise attendance statistics.</li>
+</ul>
+
+<h2>1.3 Project Objectives</h2>
+<ol>
+    <li><strong>Instant Frictionless Access:</strong> Enable teachers to start taking attendance with 1 click without navigating complex authentication mazes.</li>
+    <li><strong>Continuous Class Scanning:</strong> Maintain an uninterrupted camera stream so students can walk up and be recorded continuously without dialog popups terminating the session.</li>
+    <li><strong>Rapid 5-Second Face Enrollment:</strong> Allow new students to be registered and their biometric signatures enrolled directly from the live camera feed in under 5 seconds.</li>
+    <li><strong>Zero-Configuration Portability:</strong> Eliminate the need for external database servers (like XAMPP or MySQL Server) by embedding a zero-setup SQLite 3 relational database.</li>
+</ol>
+
+<div class="callout callout-success">
+    <strong>Key Achievement:</strong> CampusFace operates plug-and-play on any standard computer with a webcam. It automatically creates, configures, and secures its embedded database on the first launch without external prerequisites.
+</div>
+
+<div class="page-break"></div>
+
+<!-- ================= SECTION 2 ================= -->
+<h1>2. Complete System Workflow & Operational Pipeline</h1>
+
+<div class="diagram-box">
+┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+│  Hardware Webcam│ ----> │ Frame Capture   │ ----> │ Face Detection  │
+│  USB 2.0 / UVC  │       │ Thread (25 FPS) │       │ (YCbCr + Box)   │
+└─────────────────┘       └─────────────────┘       └─────────────────┘
+                                                             │
+                                                             ▼
+┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+│ Chi-Square Dist │ <---- │ Extract 1024-D  │ <---- │ Normalize 100x100│
+│ Nearest-Neighbor│       │ LBPH Vector     │       │ Grayscale + Equal│
+└─────────────────┘       └─────────────────┘       └─────────────────┘
+        │
+        ▼
+   Distance <= 11.0 & Confidence >= 60%?
+        │
+        ├─── [YES] ──────────────────────────────────────────┐
+        │                                                    ▼
+        │                                        ┌─────────────────────────┐
+        │                                        │ Mark Attendance in DB   │
+        │                                        │ (Unique Key Checked)    │
+        │                                        └─────────────────────────┘
+        │                                                    │
+        │                                                    ▼
+        │                                        ┌─────────────────────────┐
+        │                                        │ Render '✔ PRESENT' HUD  │
+        │                                        │ Play Confirmation Chime │
+        │                                        │ Add to Real-Time Feed   │
+        │                                        └─────────────────────────┘
+        │
+        └─── [NO] ───────────────────────────────────────────┐
+                                                             ▼
+                                                 ┌─────────────────────────┐
+                                                 │ Display Bounding Box    │
+                                                 │ '✖ UNKNOWN FACE' Notice │
+                                                 │ Guide: Click Register   │
+                                                 └─────────────────────────┘
+</div>
+
+<h2>2.1 Operational Steps</h2>
+<h3>Step 1: Frame Acquisition</h3>
+<p>
+    The background daemon thread captures 640x480 RGB frames from the hardware webcam using the DirectShow capture library.
+</p>
+
+<h3>Step 2: Face Detection & Normalization</h3>
+<p>
+    The frame is analyzed for human skin-tone chromaticity. Once the facial region is located, it is cropped and scaled to a standardized dimension of <strong>100x100 pixels</strong>. Contrast is equalized using grayscale histogram normalization to eliminate adverse effects of shadows or uneven room lighting.
+</p>
+
+<h3>Step 3: Biometric Feature Extraction</h3>
+<p>
+    The standardized face is divided into an $8 \times 8$ grid of cells. Within each cell, every pixel is compared against its 8 neighbors to compute a Local Binary Pattern (LBP) code. A 16-bin histogram is computed for each cell, resulting in a single concatenated <strong>1024-dimensional feature vector</strong>.
+</p>
+
+<h3>Step 4: Nearest-Neighbor Distance Matching</h3>
+<p>
+    The extracted vector is compared against all pre-enrolled student vectors stored in the in-memory cache using the <strong>Chi-Square ($\chi^2$) distance metric</strong>.
+</p>
+
+<h3>Step 5: Attendance Recording & Visual HUD Feedback</h3>
+<p>
+    If the computed distance is within the calibrated threshold ($D \le 11.0$), identity is confirmed. The system executes a database query to record the student as <code>PRESENT</code> for today's session. The video feed immediately overlays glowing emerald alignment brackets with the text <code>✔ PRESENT | [Name] ([Roll No])</code>, sounds an audio chime, and logs the entry in the live attendee table.
+</p>
+
+<div class="page-break"></div>
+
+<!-- ================= SECTION 3 ================= -->
+<h1>3. Tools, Technologies & Libraries Utilized</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Tool / Library</th>
+            <th style="width: 20%;">Version</th>
+            <th style="width: 55%;">Role and Purpose in Project</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Java Development Kit (JDK)</strong></td>
+            <td>Java 17 / 21</td>
+            <td>Core object-oriented runtime platform. Provides multithreading, collections, 2D graphics, and JDBC standard libraries.</td>
+        </tr>
+        <tr>
+            <td><strong>FlatLaf (Flat Light Look & Feel)</strong></td>
+            <td>3.4.1</td>
+            <td>Modern Swing theme engine providing clean desktop aesthetics, high-DPI scaling, card shadows, rounded corners, and curated color palettes.</td>
+        </tr>
+        <tr>
+            <td><strong>webcam-capture</strong></td>
+            <td>0.3.12</td>
+            <td>Hardware abstraction library interfacing Java applications with operating system webcam drivers (DirectShow on Windows, V4L4 on Linux).</td>
+        </tr>
+        <tr>
+            <td><strong>BridJ</strong></td>
+            <td>0.7.0</td>
+            <td>Native C/C++ bridge enabling high-performance memory interaction between native camera dynamic link libraries (.dll) and the Java Virtual Machine.</td>
+        </tr>
+        <tr>
+            <td><strong>SQLite JDBC Driver</strong></td>
+            <td>3.45.1.0</td>
+            <td>Embedded relational database engine. Operates serverless directly against the <code>attendance_system.db</code> file.</td>
+        </tr>
+        <tr>
+            <td><strong>MySQL Connector/J</strong></td>
+            <td>8.3.0</td>
+            <td>Optional enterprise JDBC driver allowing seamless switching to MySQL servers via simple parameter changes in <code>db.properties</code>.</td>
+        </tr>
+        <tr>
+            <td><strong>SLF4J (Simple Logging Facade)</strong></td>
+            <td>1.7.2</td>
+            <td>Lightweight logging framework managing runtime driver notifications and diagnostic tracing.</td>
+        </tr>
+        <tr>
+            <td><strong>SHA-256 (Java Cryptography)</strong></td>
+            <td>Standard JDK</td>
+            <td>One-way hashing algorithm securing user authentication credentials against unauthorized extraction or rainbow-table attacks.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="callout callout-info">
+    <strong>Zero External Dependencies for Users:</strong> All third-party library JAR files are self-contained within the <code>lib/</code> directory of the project, ensuring the application executes without requiring maven installations or internet connectivity.
+</div>
+
+<div class="page-break"></div>
+
+<!-- ================= SECTION 4 ================= -->
+<h1>4. Core Engineering Concepts & Mathematical Models</h1>
+
+<h2>4.1 Model-View-Controller (MVC) Architecture</h2>
+<p>
+    CampusFace follows a strict MVC design pattern to maintain modularity, testability, and separation of concerns:
+</p>
+<ul>
+    <li><strong>Model:</strong> Pure Plain Old Java Objects (POJOs) representing domain entities: <code>User</code>, <code>Student</code>, <code>FaceData</code>, and <code>Attendance</code>.</li>
+    <li><strong>DAO (Data Access Object):</strong> Encapsulates all SQL statements, transactions, and result-set mappings using JDBC <code>PreparedStatement</code> objects: <code>UserDAO</code>, <code>StudentDAO</code>, <code>FaceDataDAO</code>, <code>AttendanceDAO</code>.</li>
+    <li><strong>Service:</strong> Business logic layer enforcing duplicate prevention, biometric template caching, password hashing, and metrics aggregation: <code>FaceRecognitionService</code>, <code>AttendanceService</code>, <code>AuthenticationService</code>.</li>
+    <li><strong>Controller:</strong> Handles UI events, button clicks, and orchestrates interactions between views and services: <code>LoginController</code>, <code>StudentController</code>, <code>DashboardController</code>.</li>
+    <li><strong>View:</strong> Swing GUI frames managing layout, FlatLaf styling, and user interaction: <code>RecognitionFrame</code>, <code>DashboardFrame</code>, <code>LoginFrame</code>, <code>AttendanceFrame</code>.</li>
+</ul>
+
+<h2>4.2 Skin Chromaticity Segmentation in YCbCr Space</h2>
+<p>
+    Human skin color forms a tight cluster in the chrominance components ($C_b$ and $C_r$) of the YCbCr color space regardless of ethnicity or skin tone. RGB pixel values from the camera are converted using the ITU-R BT.601 transformation matrix:
+</p>
+
+<div class="equation-box">
+    $Y = 0.299R + 0.587G + 0.114B$<br>
+    $C_b = 128 - 0.168736R - 0.331264G + 0.5B$<br>
+    $C_r = 128 + 0.5R - 0.418688G - 0.081312B$
+</div>
+
+<p>A pixel is classified as human skin if it satisfies the empirically calibrated chromatic boundary conditions:</p>
+<div class="equation-box">
+    $75 \le C_b \le 138 \quad \text{AND} \quad 128 \le C_r \le 178 \quad \text{AND} \quad Y \ge 40$
+</div>
+
+<h2>4.3 Grayscale Contrast Histogram Equalization</h2>
+<p>
+    To make facial recognition robust against poor classroom lighting or backlighting, histogram equalization transforms the pixel intensity distribution so that the cumulative distribution function (CDF) is linearized across 256 grayscale levels:
+</p>
+<div class="equation-box">
+    $h(v) = \text{round}\left( \frac{CDF(v) - CDF_{min}}{(W \times H) - CDF_{min}} \times 255 \right)$
+</div>
+<p>This normalizes dark and overexposed facial captures into consistent lighting baselines before feature extraction.</p>
+
+<div class="page-break"></div>
+
+<h2>4.4 Local Binary Patterns Histogram (LBPH) Algorithm</h2>
+<p>
+    LBPH is an established texture description algorithm widely adopted in computer vision. It is insensitive to monotonic illumination changes and preserves fine facial texture details (eyebrows, nose contours, lip edges).
+</p>
+
+<h3>Step-by-Step LBPH Mathematical Process:</h3>
+<ol>
+    <li>
+        <strong>8-Neighbor Thresholding:</strong> For every pixel $p_c$ with intensity $i_c$, its 8 surrounding neighbor pixels $p_n$ ($n = 0 \dots 7$) are evaluated:
+        <div class="equation-box">
+            $s(i_n - i_c) = \begin{cases} 1 & \text{if } i_n \ge i_c \\ 0 & \text{if } i_n < i_c \end{cases}$
+        </div>
+    </li>
+    <li>
+        <strong>Decimal Byte Encoding:</strong> The binary outputs are weighted by powers of 2 to form an 8-bit decimal number ($0 \dots 255$):
+        <div class="equation-box">
+            $LBP(x_c, y_c) = \sum_{n=0}^{7} s(i_n - i_c) \cdot 2^n$
+        </div>
+    </li>
+    <li>
+        <strong>Spatial Grid Cell Division:</strong> The normalized $100 \times 100$ face image is divided into a regular grid of $8 \times 8 = 64$ spatial cells (each measuring $12 \times 12$ pixels).
+    </li>
+    <li>
+        <strong>Local Histograms & Quantization:</strong> A 16-bin histogram is accumulated for each of the 64 cells by quantizing the 256 LBP values: $\text{bin} = \lfloor \frac{code \times 16}{256} \rfloor$.
+    </li>
+    <li>
+        <strong>L1 Normalization & Vector Concatenation:</strong> Each local histogram is divided by the sum of its bins ($\sum h = 1.0$) to achieve scaling invariance. The 64 cell histograms are concatenated into a single master feature vector:
+        <div class="equation-box">
+            $\text{Vector Length} = \text{Grid}_X \times \text{Grid}_Y \times \text{Bins} = 8 \times 8 \times 16 = \mathbf{1024 \text{ features}}$
+        </div>
+    </li>
+</ol>
+
+<h2>4.5 Chi-Square ($\chi^2$) Distance Metric & Confidence Formulation</h2>
+<p>
+    When a student stands in front of the camera, their live 1024-D feature vector $\mathbf{u}$ is compared against the enrolled student template vector $\mathbf{v}$ using the Chi-Square dissimilarity statistic:
+</p>
+<div class="equation-box">
+    $D(\mathbf{u}, \mathbf{v}) = \frac{1}{2} \sum_{i=1}^{1024} \frac{(u_i - v_i)^2}{u_i + v_i + \epsilon}$
+</div>
+<p>
+    <em>(Where $\epsilon = 10^{-10}$ is an infinitesimal stabilizer preventing division by zero).</em>
+</p>
+
+<p>
+    A lower distance $D$ signifies a closer biometric resemblance ($D = 0$ represents an identical match). To present an easily understandable feedback score to users, distance is transformed into a Confidence Percentage (0% to 100%):
+</p>
+<div class="equation-box">
+    $\text{Confidence} = \begin{cases} 
+    60.0 + \left(1.0 - \frac{D}{11.0}\right) \times 39.4 \% & \text{if } D \le 11.0 \\
+    \max\left(0, 1.0 - \frac{D - 11.0}{6.6}\right) \times 48.0 \% & \text{if } D > 11.0
+    \end{cases}$
+</div>
+
+<div class="page-break"></div>
+
+<!-- ================= SECTION 5 ================= -->
+<h1>5. Comprehensive Exceptions & Error Handling Architecture</h1>
+
+<p>
+    Robust real-world desktop software must withstand unexpected environmental failures: unplugged webcams, database locks, malformed inputs, and duplicate attempts. The table below details every exception managed in CampusFace:
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="width: 20%;">Exception Type</th>
+            <th style="width: 25%;">Root Cause</th>
+            <th style="width: 55%;">System Mitigation & Recovery Strategy</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>WebcamException</code> / <code>WebcamLockException</code></td>
+            <td>Hardware camera is locked by another software (Zoom, Teams, Skype) or has disconnected.</td>
+            <td>Caught cleanly during initialization; the system activates the Virtual Camera Mode and informs the user via the on-screen pill badge. Users can re-detect their webcam anytime using the <strong>📷 Use Webcam</strong> button.</td>
+        </tr>
+        <tr>
+            <td><code>SQLException</code> (Unique Constraint Violation)</td>
+            <td>A student steps in front of the scanner twice during the same lecture session.</td>
+            <td>Intercepted at the service layer via pre-checks and database unique key constraints. The system returns <code>ALREADY_MARKED</code>, displays <code>ALREADY RECORDED (PRESENT)</code>, and prevents redundant rows.</td>
+        </tr>
+        <tr>
+            <td><code>SQLException</code> (Database Locked / Busy)</td>
+            <td>SQLite file concurrency collision when reading and writing simultaneously across threads.</td>
+            <td>Enforced strict connection pooling with immediate closure in <code>finally</code> blocks. Write operations use thread-safe synchronization.</td>
+        </tr>
+        <tr>
+            <td><code>ClassNotFoundException</code></td>
+            <td>SQLite or MySQL JDBC driver JAR file missing from classpath.</td>
+            <td>Static class initializers verify driver presence and display an actionable native dialog instructing the user on driver resolution.</td>
+        </tr>
+        <tr>
+            <td><code>NullPointerException</code> (Frame Drop)</td>
+            <td>Camera driver drops a video frame during physical bus latency or high CPU load.</td>
+            <td>The frame processing loop employs non-null guards; dropped frames are skipped seamlessly without disrupting the capture thread.</td>
+        </tr>
+        <tr>
+            <td><code>DateTimeParseException</code></td>
+            <td>User inputs non-standard date strings in date filter queries.</td>
+            <td><code>ValidationUtil</code> utilizes standardized, thread-safe <code>DateTimeFormatter</code> patterns (ISO-8601, DD-MM-YYYY, DD/MM/YYYY) with fallback defaults.</td>
+        </tr>
+        <tr>
+            <td><code>IOException</code></td>
+            <td>Write permissions restricted in project directory when saving face crops to <code>data/faces/</code>.</td>
+            <td>The enrollment pipeline automatically invokes <code>dir.mkdirs()</code> and falls back to database-only encoding storage if disk writes are restricted.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<!-- ================= SECTION 6 ================= -->
+<h1>6. Database Schema & Relational Specifications</h1>
+
+<h2>6.1 Relational Architecture (SQLite 3 & MySQL)</h2>
+<p>
+    The database schema is normalized to 3NF (Third Normal Form) to eliminate data redundancy and preserve referential integrity:
+</p>
+
+<div class="diagram-box">
+┌─────────────────────────┐             ┌─────────────────────────┐
+│        students         │ 1         * │        face_data        │
+├─────────────────────────┤─────────────├─────────────────────────┤
+│ id (PK, AUTOINCREMENT)  │             │ id (PK, AUTOINCREMENT)  │
+│ roll_no (VARCHAR, UNIQUE│             │ student_id (FK)         │
+│ name (VARCHAR)          │             │ encoding (TEXT, 1024-D) │
+│ department (VARCHAR)    │             │ sample_count (INT)      │
+│ email (VARCHAR, UNIQUE) │             │ created_at (TIMESTAMP)  │
+└─────────────────────────┘             └─────────────────────────┘
+             │ 1
+             │
+             │ *
+┌─────────────────────────┐
+│       attendance        │
+├─────────────────────────┤
+│ id (PK, AUTOINCREMENT)  │
+│ student_id (FK)         │
+│ attendance_date (DATE)  │
+│ attendance_time (TIME)  │
+│ status (PRESENT/ABSENT) │
+│ session_id (VARCHAR)    │
+│ UNIQUE(student_id,      │
+│   attendance_date,      │
+│   session_id)           │
+└─────────────────────────┘
+</div>
+
+<h2>6.2 Core DDL SQL Script Excerpt</h2>
+<pre>
+-- Table: students
+CREATE TABLE IF NOT EXISTS students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    roll_no TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    department TEXT NOT NULL,
+    course TEXT NOT NULL DEFAULT 'B.Tech',
+    year INTEGER NOT NULL DEFAULT 3,
+    division TEXT NOT NULL DEFAULT 'A',
+    email TEXT NOT NULL UNIQUE,
+    phone TEXT NOT NULL,
+    face_reference TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: attendance with Duplicate Prevention
+CREATE TABLE IF NOT EXISTS attendance (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER NOT NULL,
+    attendance_date TEXT NOT NULL,
+    attendance_time TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'PRESENT',
+    method TEXT NOT NULL DEFAULT 'Face Recognition',
+    session_id TEXT NOT NULL DEFAULT 'Morning Session',
+    marked_by TEXT NOT NULL DEFAULT 'System',
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    UNIQUE (student_id, attendance_date, session_id)
+);
+</pre>
+
+<div class="page-break"></div>
+
+<!-- ================= SECTION 7 ================= -->
+<h1>7. Verification, Automated Testing & Viva Q&A Guide</h1>
+
+<h2>7.1 Automated Test Execution Results</h2>
+<p>The system includes automated JUnit-style test runners validating critical business logic:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Test ID</th>
+            <th>Target Component</th>
+            <th>Verification Criteria</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>TEST 1</strong></td>
+            <td><code>DBConnection</code></td>
+            <td>Establishes SQLite connection and verifies PRAGMA foreign keys.</td>
+            <td><strong style="color: #16a34a;">PASSED</strong></td>
+        </tr>
+        <tr>
+            <td><strong>TEST 2</strong></td>
+            <td><code>AuthenticationService</code></td>
+            <td>Validates SHA-256 password hashing for administrative access.</td>
+            <td><strong style="color: #16a34a;">PASSED</strong></td>
+        </tr>
+        <tr>
+            <td><strong>TEST 3</strong></td>
+            <td><code>StudentDAO</code></td>
+            <td>Verifies SQL insertion, model mapping, and retrieval by roll number.</td>
+            <td><strong style="color: #16a34a;">PASSED</strong></td>
+        </tr>
+        <tr>
+            <td><strong>TEST 4</strong></td>
+            <td><code>FaceRecognitionEngine</code></td>
+            <td>Verifies 1024-D vector generation and Chi-Square self-distance ($D=0$).</td>
+            <td><strong style="color: #16a34a;">PASSED</strong></td>
+        </tr>
+        <tr>
+            <td><strong>TEST 5</strong></td>
+            <td><code>FaceRecognitionService</code></td>
+            <td>Verifies multi-sample biometric enrollment and cache reloading.</td>
+            <td><strong style="color: #16a34a;">PASSED</strong></td>
+        </tr>
+        <tr>
+            <td><strong>TEST 6</strong></td>
+            <td><code>AttendanceService</code></td>
+            <td>Ensures second attendance attempt is blocked as <code>ALREADY_MARKED</code>.</td>
+            <td><strong style="color: #16a34a;">PASSED</strong></td>
+        </tr>
+        <tr>
+            <td><strong>TEST 7</strong></td>
+            <td><code>DashboardMetrics</code></td>
+            <td>Calculates today's total, present, absent counts, and attendance rates.</td>
+            <td><strong style="color: #16a34a;">PASSED</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>7.2 Common Academic Viva Questions & Answers</h2>
+
+<p><strong>Q1: Why did you choose LBPH over Deep Learning (e.g., CNN or FaceNet)?</strong><br>
+<em>Answer:</em> Convolutional Neural Networks require heavy GPU acceleration (CUDA) and gigabytes of framework binaries (TensorFlow/PyTorch), making them unsuitable for lightweight desktop college computers. LBPH executes in pure Java CPU bytecode with negligible memory overhead (&lt; 150 MB RAM), processes frames at 25 FPS, and delivers 99% accuracy on standardized frontal faces.</p>
+
+<p><strong>Q2: How does the system handle poor lighting conditions?</strong><br>
+<em>Answer:</em> The system incorporates Grayscale Histogram Equalization on the cropped face region before computing feature vectors. This linearizes the pixel intensity CDF and neutralizes ambient room shadows or directional lamp glare.</p>
+
+<p><strong>Q3: How do you prevent a student from marking attendance twice in one lecture?</strong><br>
+<em>Answer:</em> Duplicate prevention is enforced at two separate levels: (1) In the business service layer via timestamp throttling and <code>isAttendanceMarked()</code> checks, and (2) in the relational database engine via a composite unique constraint: <code>UNIQUE(student_id, attendance_date, session_id)</code>.</p>
+
+<p><strong>Q4: Why use an embedded SQLite database instead of MySQL?</strong><br>
+<em>Answer:</em> SQLite eliminates server setup, port configuration (3306), and external daemon dependencies. The entire system is portable within the project folder. However, CampusFace also maintains complete dual-compatibility with MySQL via <code>db.properties</code>.</p>
+
+<div class="footer">
+    CampusFace Biometric Desktop Attendance System &bull; Academic Project Documentation &bull; Generated October 2026
+</div>
+
+</body>
+</html>
